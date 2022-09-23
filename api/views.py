@@ -7,6 +7,25 @@ from .utils import updateNote, getNoteDetail, deleteNote, getNotesList, createNo
 
 # Create your views here.
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        # ...
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
+
 @api_view(['GET'])
 def getRoutes(request):
     
@@ -43,6 +62,20 @@ def getRoutes(request):
         },
     ]
     return Response(routes)
+
+# @api_view(['POST',"GET"])
+# def signUp(request):
+#     data = request.data
+#     user = User.objects.all()
+#     newUser = User.objects.create(
+#         fname = data["fname"],
+#         email = data["email"],
+#         password = data["password"],
+#     )
+#     serializer = UserSerializer(user, many=True)
+#     return Response(serializer.data)
+    #user = User.objects.get(email = )
+    
 
 @api_view(["GET","POST"])
 def getNotes(request):

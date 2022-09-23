@@ -9,3 +9,4 @@ class Note(models.Model):
     def __str__(self):
         return self.body[0:40]
     
+    
